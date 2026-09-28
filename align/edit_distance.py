@@ -1,11 +1,6 @@
 """
 edit_distance.py
-=================
-Levenshtein edit distance: the minimum number of single-character
-insertions, deletions, or substitutions needed to turn one string
-into another. This is the simplest dynamic programming alignment
-algorithm, and the DP table it builds is the same shape used by
-Needleman-Wunsch and Smith-Waterman later.
+
 """
 
 import numpy as np
