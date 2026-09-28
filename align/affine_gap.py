@@ -1,17 +1,6 @@
 """
 affine_gap.py
 =============
-Global alignment with affine gap penalties (Gotoh's algorithm).
-
-To track this, we need THREE matrices instead of one:
-- M[i][j]  = best score of an alignment of seq1[:i], seq2[:j] that ENDS
-             in a match/mismatch (no gap at the very end)
-- Ix[i][j] = best score that ends with a gap in seq2 (i.e. seq1[i-1] is
-             aligned against a gap)
-- Iy[i][j] = best score that ends with a gap in seq1 (i.e. seq2[j-1] is
-             aligned against a gap)
-
-The overall best score at (i, j) is whichever of the three is highest.
 """
 
 import numpy as np
