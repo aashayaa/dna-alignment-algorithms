@@ -1,12 +1,11 @@
 """
 run_examples.py
-================
 """
 
 import sys
 import os
 
-# Allow running this script directly without installing the package
+
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 from align.edit_distance import edit_distance
@@ -21,25 +20,23 @@ def main():
 
     print(f"Comparing '{seq1}' and '{seq2}'\n")
 
-    # 1. Edit distance
     dist = edit_distance(seq1, seq2)
     print(f"Edit distance: {dist}")
 
-    # 2. Needleman-Wunsch (global alignment)
+    #Needleman-Wunsch
     score, a1, a2, table = needleman_wunsch(seq1, seq2, return_table=True)
     print(f"\nNeedleman-Wunsch score: {score}")
     print(a1)
     print(a2)
 
-    # 3. Smith-Waterman (local alignment) -- using sequences with a
-    # clearer local match buried in unrelated flanking regions
+    #Smith-Waterman
     local_seq1, local_seq2 = "TGTTACGG", "GGTTGACTA"
     sw_score, sw_a1, sw_a2 = smith_waterman(local_seq1, local_seq2)
     print(f"\nSmith-Waterman score: {sw_score}")
     print(sw_a1)
     print(sw_a2)
 
-    # 4. Affine gap penalties -- using sequences with a clear multi-base gap
+    #Affine gap penalties 
     affine_seq1, affine_seq2 = "GATTACAGATTACA", "GATTAGATTACA"
     aff_score, aff_a1, aff_a2 = affine_gap_alignment(
         affine_seq1, affine_seq2, gap_open=-3, gap_extend=-1
@@ -48,7 +45,7 @@ def main():
     print(aff_a1)
     print(aff_a2)
 
-    # 5. Visualize the Needleman-Wunsch matrix + traceback path
+    #traceback 
     os.makedirs("examples/output", exist_ok=True)
     path = build_traceback_path(
         seq1, seq2, table, match_score=1, mismatch_score=-1, gap_penalty=-2
