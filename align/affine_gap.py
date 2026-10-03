@@ -1,6 +1,5 @@
 """
 affine_gap.py
-=============
 """
 
 import numpy as np
@@ -16,11 +15,8 @@ def affine_gap_alignment(
     gap_open: int = -3,
     gap_extend: int = -1,
 ) -> tuple[int, str, str]:
-    """Compute optimal global alignment with affine gap penalties.
 
-    Returns:
-        (score, aligned_seq1, aligned_seq2)
-    """
+    # global alignment
     n, m = len(seq1), len(seq2)
 
     M = np.full((n + 1, m + 1), NEG_INF)
@@ -29,7 +25,7 @@ def affine_gap_alignment(
 
     M[0][0] = 0
 
-    # First row/column: only reachable by opening then extending a single gap
+    # First row/column
     for i in range(1, n + 1):
         Ix[i][0] = gap_open + (i - 1) * gap_extend
     for j in range(1, m + 1):
@@ -44,9 +40,7 @@ def affine_gap_alignment(
             M[i][j] = max(M[i - 1][j - 1], Ix[i - 1][j - 1], Iy[i - 1][j - 1]) + s
 
             # Ix: either OPEN a new gap from an M cell, or EXTEND an
-            # existing gap from an Ix cell. (Biologically: you don't
-            # usually switch straight from a seq1-gap to a seq2-gap
-            # without a match between them, so we don't allow Iy -> Ix here.)
+            # existing gap from an Ix cell. 
             Ix[i][j] = max(
                 M[i - 1][j] + gap_open,
                 Ix[i - 1][j] + gap_extend,
@@ -62,7 +56,7 @@ def affine_gap_alignment(
     state = max(final_scores, key=final_scores.get)
     score = final_scores[state]
 
-    # Traceback: walk backward, following whichever matrix we're "in"
+    # Traceback
     aligned1, aligned2 = [], []
     i, j = n, m
 
@@ -71,7 +65,7 @@ def affine_gap_alignment(
             s = match_score if seq1[i - 1] == seq2[j - 1] else mismatch_score
             aligned1.append(seq1[i - 1])
             aligned2.append(seq2[j - 1])
-            # figure out which matrix we came from
+            # figure out which matrix 
             prev = {"M": M[i - 1][j - 1], "Ix": Ix[i - 1][j - 1], "Iy": Iy[i - 1][j - 1]}
             state = max(prev, key=prev.get)
             i -= 1
@@ -79,13 +73,13 @@ def affine_gap_alignment(
         elif state == "Ix":
             aligned1.append(seq1[i - 1])
             aligned2.append("-")
-            # came from opening (M) or extending (Ix) a gap
+            # M or Ix
             if Ix[i][j] == M[i - 1][j] + gap_open:
                 state = "M"
             else:
                 state = "Ix"
             i -= 1
-        else:  # state == "Iy"
+        else:  # state is Iy
             aligned1.append("-")
             aligned2.append(seq2[j - 1])
             if Iy[i][j] == M[i][j - 1] + gap_open:
