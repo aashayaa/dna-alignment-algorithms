@@ -1,9 +1,5 @@
 """
 needleman_wunsch.py
-====================
-Needleman-Wunsch: global alignment of two sequences. Finds the
-best end-to-end alignment (the whole of both sequences), using a
-scoring scheme instead of a raw edit count.
 """
 
 import numpy as np
@@ -18,15 +14,8 @@ def needleman_wunsch(
     return_table: bool = False,
 ):
     """Compute the optimal global alignment of two sequences.
-
-    Args:
-        return_table: if True, also return the raw DP table (useful for
-            visualization). Defaults to False to keep the normal return
-            signature simple.
-
     Returns:
-        (score, aligned_seq1, aligned_seq2) normally, or
-        (score, aligned_seq1, aligned_seq2, table) if return_table=True.
+        (score, aligned_seq1, aligned_seq2) 
     """
     n, m = len(seq1), len(seq2)
     table = np.zeros((n + 1, m + 1), dtype=int)
